@@ -47,6 +47,13 @@ $path = $this->Html->link(
 			'password',
 			array('label' => __('Mot de passe'))
 		);
+		echo $this->Form->input(
+			'password_again',
+			array(
+				'label' => __('Ressaisissez votre de passe'),
+				'type' => 'password'
+			)
+		);
 		?>
 	</fieldset>
 	<?php echo $this->Form->end(__('Ajouter'));?>

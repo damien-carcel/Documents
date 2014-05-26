@@ -22,12 +22,14 @@
  * @license     http://www.gnu.org/licenses/gpl.html
  */
 
+$appName = 'Documents';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 	<?php echo $this->Html->charset(), "\n"; ?>
 	<title>
+		<?php echo $appName; ?>:
 		<?php echo $title_for_layout, "\n"; ?>
 	</title>
 	<?php

@@ -70,10 +70,10 @@ Eventually, configure a super administrator for your application. You can simply
 The application is fully functional but is still very crude on many aspects. If you find this application useful or are simply curious about it, your contribution is welcome.
 
 There is a few things that need to be done in priority for a 1.0 release:
-* localization of the application (every messages are in french right now, as it is my mother language),
-* finer connection system with no error access message when you are not connected and try to access the app,
 * download links should be fakes and not refer to the real location of the file on the server,
-* when creating a new account, ask twice the password for verification, the email to send a confirmation that the account is active, and a captcha system,
+* when creating a new account ask an email to send a confirmation that the account is active, a
+* add a captcha system,
+* localization of the application (every messages are in french right now, as it is my mother language),
 * a global users administration page accessible only from the super administrator, allowing to see every users informations and change their role in the application,
 * a user administration page: basically the user should be able to change its password, email address…
 
