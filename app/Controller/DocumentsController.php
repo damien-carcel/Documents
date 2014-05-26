@@ -61,11 +61,7 @@ class DocumentsController extends AppController {
  * @throws NotFoundException Return an exception if the id
  * folder is not a number.
  */
-	public function index($folderId = 0) {
-		$this->set(
-			'title_for_layout',
-			'Documents de la Compagnie franche du Khatovar'
-		);
+	public function index($folderId = 0) {$this->set('title_for_layout', '');
 
 		if (is_numeric($folderId)) {
 			// Retrieve all folders contained by current folder
@@ -208,10 +204,8 @@ class DocumentsController extends AppController {
  * correspond to an existing folder.
  */
 	public function addFolder($folderId) {
-		$this->set(
-			'title_for_layout',
-			'Documents de la Compagnie franche du Khatovar'
-		);
+		$this->set('title_for_layout', __('Nouveau dossier'));
+
 
 		// Check that the current folder exists
 		if ($folderId != 0) {
@@ -288,10 +282,7 @@ class DocumentsController extends AppController {
  * correspond to an existing folder.
  */
 	public function addFile($folderId) {
-		$this->set(
-			'title_for_layout',
-			'Documents de la Compagnie franche du Khatovar'
-		);
+		$this->set('title_for_layout', __('Nouvel upload'));
 
 		// Check if the folder which will contain the uploaded file exist
 		$folder = $this->Folder->findById($folderId);
@@ -359,10 +350,7 @@ class DocumentsController extends AppController {
  * correspond to an existing folder.
  */
 	public function moveFolder($folderId) {
-		$this->set(
-			'title_for_layout',
-			'Documents de la Compagnie franche du Khatovar'
-		);
+		$this->set( 'title_for_layout', __('Déplacer'));
 
 		$folderToMove = $this->Folder->findById($folderId);
 		if (!$folderToMove) {
@@ -417,10 +405,7 @@ class DocumentsController extends AppController {
  * correspond to an existing file.
  */
 	public function moveFile($fileId) {
-		$this->set(
-			'title_for_layout',
-			'Documents de la Compagnie franche du Khatovar'
-		);
+		$this->set('title_for_layout', __('Déplacer'));
 
 		$fileToMove = $this->Document->findById($fileId);
 		if (!$fileToMove) {
@@ -467,10 +452,7 @@ class DocumentsController extends AppController {
 	}
 
 	public function renameFolder($folderId) {
-		$this->set(
-			'title_for_layout',
-			'Documents de la Compagnie franche du Khatovar'
-		);
+		$this->set('title_for_layout', __('Nouveau nom'));
 
 		$folderToRename = $this->Folder->findById($folderId);
 		if (!$folderToRename) {
@@ -498,10 +480,7 @@ class DocumentsController extends AppController {
 	}
 
 	public function renameFile($fileId) {
-		$this->set(
-			'title_for_layout',
-			'Documents de la Compagnie franche du Khatovar'
-		);
+		$this->set('title_for_layout', __('Nouveau nom'));
 
 		$fileToRename = $this->Document->findById($fileId);
 		if (!$fileToRename) {

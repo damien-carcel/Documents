@@ -47,11 +47,10 @@ class User extends AppModel {
 				'message' => 'Un mot de passe est requis.'
 			)
 		),
-		'role' => array(
-			'valid' => array(
-				'rule' => array('inList', array('superadmin', 'admin', 'user')),
-				'message' => 'Merci d’entrer un rôle valide.',
-				'allowEmpty' => false
+		'password_again' => array(
+			'required' => array(
+				'rule' => array('notEmpty'),
+				'message' => 'Un mot de passe est requis.'
 			)
 		)
 	);

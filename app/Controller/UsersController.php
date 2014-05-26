@@ -41,13 +41,19 @@ class UsersController extends AppController {
  * Connect a user.
  */
 	public function login() {
+		$connectedUser = $this->Session->read('Auth.User.username');
+		if (!empty($connectedUser)) {
+			return $this->redirect(
+				array('controller' => 'documents', 'action' => 'index')
+			);
+		}
+
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				return $this->redirect($this->Auth->redirectUrl());
 			} else {
 				$this->Session->setFlash(
-					__('Nom d’utilisateur ou mot de passe invalide. Merci de' .
-						' bien vouloir réessayer.')
+					__('Nom d’utilisateur ou mot de passe invalide. Merci de bien vouloir réessayer.')
 				);
 			}
 		}
@@ -89,16 +95,28 @@ class UsersController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->User->create();
-			if ($this->User->save($this->request->data)) {
+			$userExists = $this->User->findByUsername(
+				$this->request->data['User']['username']
+			);
+			if ($userExists) {
 				$this->Session->setFlash(
-					__('L’utilisateur a bien été sauvegardé.')
+					__('Cet utilisateur existe déjà, merci de choisir un autre pseudo.')
 				);
-				return $this->redirect(array('action' => 'index'));
-			} else {
+			} elseif (!$userExists && $this->request->data['User']['password'] === $this->request->data['User']['password_again']) {
+				$this->User->create();
+				if ($this->User->save($this->request->data)) {
+					$this->Session->setFlash(
+						__('L’utilisateur a bien été sauvegardé.')
+					);
+					return $this->redirect(array('action' => 'login'));
+				} else {
+					$this->Session->setFlash(
+						__('L’utilisateur n’a pu être sauvegardé. Merci de bien vouloir réessayer.')
+					);
+				}
+			} elseif (!$userExists && $this->request->data['User']['password'] != $this->request->data['User']['password_again']) {
 				$this->Session->setFlash(
-					__('L’utilisateur n’a pu être sauvegardé. Merci de bien' .
-						' vouloir réessayer.')
+					__('Le mot de passe doit être identique lors des deux saisies.  Merci de bien vouloir réessayer.')
 				);
 			}
 		}
@@ -123,8 +141,7 @@ class UsersController extends AppController {
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(
-					__('L’utilisateur n’a pu être sauvegardé. Merci de bien' .
-						' vouloir réessayer.')
+					__('L’utilisateur n’a pu être sauvegardé. Merci de bien vouloir réessayer.')
 				);
 			}
 		} else {
