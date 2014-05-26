@@ -71,19 +71,19 @@ The application is fully functional but is still very crude on many aspects. If 
 
 There is a few things that need to be done in priority for a 1.0 release:
 * download links should be fakes and not refer to the real location of the file on the server,
-* when creating a new account ask an email to send a confirmation that the account is active, a
+* when creating a new account ask an email to send a confirmation that the account is active,
 * add a captcha system,
 * localization of the application (every messages are in french right now, as it is my mother language),
-* a global users administration page accessible only from the super administrator, allowing to see every users informations and change their role in the application,
+* a global users administration page accessible only from the super administrator, allowing to see every users information and change their role in the application,
 * a user administration page: basically the user should be able to change its password, email address…
 
 Other useful functionality can wait for further release:
 * capacity to upload multiple files at once,
-* refine the CSS stylesheet (it is barely a rework of the generic CakePHP CSS that comes with the framework),
+* refine the CSS stylesheet (right now, it is barely a rework of the generic CakePHP CSS that comes with the framework),
 * add an upload progression bar,
 * possibility to download an entire folder and its contents at once,
 * possibility to stay connected between sessions,
-* Installation script to automatize installation.
+* Installation script to automatize installations and updates.
 
 # License
 
