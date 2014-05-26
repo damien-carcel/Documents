@@ -90,9 +90,7 @@ class DocumentsController extends AppController {
 
 			// Add the path to the folder containing the file on the server
 			foreach ($documents as &$document) {
-				$document['Document']['path'] = $this
-						->_pathToFile($document['Document']['created']) . DS .
-					$document['Document']['file'];
+				$document = $this->_pathToFile($document);
 			}
 
 			// Set all folders and files contained by current folder
@@ -131,6 +129,27 @@ class DocumentsController extends AppController {
 				__('L’argument doit être un nombre entier.')
 			);
 		}
+	}
+
+/**
+ * Allow to download a file stored by the application without knowing
+ * its location on the server, but only its id.
+ *
+ * @param int $fileId The ID of the file we want to share/download
+ * @return CakeResponse
+ */
+	public function shareLink($fileId) {
+		$fileToShare = $this->Document->findById($fileId);
+		$fileToShare = $this->_pathToFile($fileToShare);
+		debug($fileToShare);
+		$this->response->file(
+			$fileToShare['Document']['path'],
+			array(
+				'download' => true,
+				'name' => $fileToShare['Document']['name']
+			)
+		);
+		return $this->response;
 	}
 
 /**
@@ -559,14 +578,16 @@ class DocumentsController extends AppController {
  * Return the path to the folder containing a file, based on its date
  * of creation on the server.
  *
- * @param string $dateTime The date of creation of the file.
- * @return string
+ * @param Document $document The file we want to find the path.
+ * @return Document
  */
-	protected function _pathToFile($dateTime) {
-		$path = 'files' . DS . CakeTime::format('Y', $dateTime) . DS .
-			CakeTime::format('m', $dateTime) . DS .
-			CakeTime::format('d', $dateTime);
-		return $path;
+	protected function _pathToFile($document) {
+		$document['Document']['path'] = 'files' . DS .
+			CakeTime::format('Y', $document['Document']['created']) . DS .
+			CakeTime::format('m', $document['Document']['created']) . DS .
+			CakeTime::format('d', $document['Document']['created']) . DS .
+			$document['Document']['file'];
+		return $document;
 	}
 
 /**

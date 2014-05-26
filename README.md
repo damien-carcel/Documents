@@ -70,7 +70,6 @@ Eventually, configure a super administrator for your application. You can simply
 The application is fully functional but is still very crude on many aspects. If you find this application useful or are simply curious about it, your contribution is welcome.
 
 There is a few things that need to be done in priority for a 1.0 release:
-* download links should be fakes and not refer to the real location of the file on the server,
 * when creating a new account ask an email to send a confirmation that the account is active,
 * add a captcha system,
 * localization of the application (every messages are in french right now, as it is my mother language),

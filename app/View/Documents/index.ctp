@@ -190,7 +190,11 @@ if ($this->Session->read('Auth.User.role') === 'admin' ||
 							<?php
 								echo $this->Html->link(
 									$document['Document']['name'],
-									DS . $document['Document']['path']
+									array(
+										'controller' => 'documents',
+										'action' => 'shareLink',
+										$document['Document']['id']
+									)
 								);
 							?>
 						</td>
