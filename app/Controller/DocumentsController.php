@@ -32,7 +32,7 @@ App::uses('CakeTime', 'Utility');
  */
 class DocumentsController extends AppController {
 
-	public $uses = array('Document', 'Folder');
+	public $uses = array('Document', 'Dir');
 
 	public $helpers = array('Html', 'Form', 'Session', 'Time');
 
@@ -66,7 +66,7 @@ class DocumentsController extends AppController {
 
 		if (is_numeric($folderId)) {
 			// Retrieve all folders contained by current folder
-			$folders = $this->Folder->find(
+			$folders = $this->Dir->find(
 				'all',
 				array(
 					'conditions' => array('parent' => $folderId),
@@ -76,8 +76,8 @@ class DocumentsController extends AppController {
 
 			// Add the number of elements contained by each folder
 			foreach ($folders as &$folder) {
-				$folder['Folder']['content'] = $this
-					->_count($folder['Folder']['id']);
+				$folder['Dir']['content'] = $this
+					->_count($folder['Dir']['id']);
 			}
 
 			// Retrieve all files contained by current folder
@@ -101,25 +101,25 @@ class DocumentsController extends AppController {
 			if ($folderId == 0) {
 				$currentName = 'Racine';
 			} else {
-				$currentFolder = $this->Folder->findById($folderId);
-				$currentName = $currentFolder['Folder']['name'];
+				$currentDir = $this->Dir->findById($folderId);
+				$currentName = $currentDir['Dir']['name'];
 
 				// Return information of all the parent folder to the
 				// view to allow a backward link
-				$previousId = $currentFolder['Folder']['parent'];
-				$previousFolders = array();
+				$previousId = $currentDir['Dir']['parent'];
+				$previousDirs = array();
 				if ($previousId == 0) {
-					$previousFolders[] = $this->_createRootFolder();
+					$previousDirs[] = $this->_createRootDir();
 				} else {
 					$workingId = $previousId;
 					do {
-						$previousFolder = $this->Folder->findById($workingId);
-						$previousFolders[] = $previousFolder;
-						$workingId = $previousFolder['Folder']['parent'];
+						$previousDir = $this->Dir->findById($workingId);
+						$previousDirs[] = $previousDir;
+						$workingId = $previousDir['Dir']['parent'];
 					} while ($workingId != 0);
-					$previousFolders[] = $this->_createRootFolder();
+					$previousDirs[] = $this->_createRootDir();
 				}
-				$this->set('previousFolders', array_reverse($previousFolders));
+				$this->set('previousDirs', array_reverse($previousDirs));
 			}
 			$this->set('currentName', $currentName);
 			$this->set('currentID', $folderId);
@@ -141,7 +141,7 @@ class DocumentsController extends AppController {
 	public function shareLink($fileId) {
 		$fileToShare = $this->Document->findById($fileId);
 		$fileToShare = $this->_pathToFile($fileToShare);
-		debug($fileToShare);
+
 		$this->response->file(
 			$fileToShare['Document']['path'],
 			array(
@@ -158,45 +158,45 @@ class DocumentsController extends AppController {
  * @param int $folderId The ID of the folder to delete.
  * @throws MethodNotAllowedException
  */
-	public function deleteFolder($folderId) {
+	public function deleteDir($folderId) {
 		if ($this->request->is('get')) {
 			throw new MethodNotAllowedException();
 		} else {
 			// Retrieve the name and the parent of the folder to delete
-			$currentFolder = $this->Folder->findById($folderId);
-			$name = $currentFolder['Folder']['name'];
-			$parent = $currentFolder['Folder']['parent'];
+			$currentDir = $this->Dir->findById($folderId);
+			$name = $currentDir['Dir']['name'];
+			$parent = $currentDir['Dir']['parent'];
 
 			// Retrieve all folder ID that are inside the current one
 			$folders[] = $folderId;
-			$newFoldersList[] = $folderId;
-			while (!empty($newFoldersList)) {
+			$newDirsList[] = $folderId;
+			while (!empty($newDirsList)) {
 				// Will contain last retrieved folders, in which we
 				// will search childs during the next loop
-				$lastFoldersList = array();
+				$lastDirsList = array();
 
-				foreach ($newFoldersList as $id) {
-					$children = $this->Folder->find(
+				foreach ($newDirsList as $id) {
+					$children = $this->Dir->find(
 						'all',
 						array('conditions' => array('parent' => $id))
 					);
 
-					$childrenFolders = array();
+					$childrenDirs = array();
 					foreach ($children as $child) {
-						$childrenFolders[] = $child['Folder']['id'];
+						$childrenDirs[] = $child['Dir']['id'];
 					}
-					$folders = array_merge($folders, $childrenFolders);
-					$lastFoldersList = array_merge(
-						$lastFoldersList,
-						$childrenFolders
+					$folders = array_merge($folders, $childrenDirs);
+					$lastDirsList = array_merge(
+						$lastDirsList,
+						$childrenDirs
 					);
 				}
-				$newFoldersList = $lastFoldersList;
+				$newDirsList = $lastDirsList;
 			}
 
 			// Delete folder and all its contents
 			foreach ($folders as $id) {
-				$this->Folder->delete($id);
+				$this->Dir->delete($id);
 				$files = $this->Document->find(
 					'all',
 					array('conditions' => array('folder' => $id))
@@ -223,13 +223,13 @@ class DocumentsController extends AppController {
  * @throws NotFoundException Return an exception if the ID does not
  * correspond to an existing folder.
  */
-	public function addFolder($folderId) {
+	public function addDir($folderId) {
 		$this->set('title_for_layout', __('Nouveau dossier'));
 
 
 		// Check that the current folder exists
 		if ($folderId != 0) {
-			if (!$this->Folder->findById($folderId)) {
+			if (!$this->Dir->findById($folderId)) {
 				throw new NotFoundException(__('Mauvais dossier parent'));
 			}
 		}
@@ -237,8 +237,8 @@ class DocumentsController extends AppController {
 		$this->set('previousId', $folderId);
 
 		if ($this->request->is('post')) {
-			$folderName = $this->request->data['Folder']['name'];
-			$folderExists = $this->Folder->find(
+			$folderName = $this->request->data['Dir']['name'];
+			$folderExists = $this->Dir->find(
 				'all',
 				array(
 					'conditions' => array(
@@ -252,8 +252,8 @@ class DocumentsController extends AppController {
 					__('Un dossier portant le nom %s existe déjà. Veuillez choisir un autre nom.', h($folderName))
 				);
 			} else {
-				$this->Folder->create();
-				if ($this->Folder->save($this->request->data)) {
+				$this->Dir->create();
+				if ($this->Dir->save($this->request->data)) {
 					return $this->redirect(
 						array('action' => 'index', $folderId)
 					);
@@ -304,7 +304,7 @@ class DocumentsController extends AppController {
 		$this->set('title_for_layout', __('Nouvel upload'));
 
 		// Check if the folder which will contain the uploaded file exist
-		$folder = $this->Folder->findById($folderId);
+		$folder = $this->Dir->findById($folderId);
 		if (!$folder && $folderId != 0) {
 			throw new NotFoundException(
 				__(
@@ -353,7 +353,7 @@ class DocumentsController extends AppController {
 				// Save the uploaded file on the server
 				move_uploaded_file(
 					$this->request->data['Document']['name']['tmp_name'],
-					$this->_createFolder() . DS . $data['Document']['file']
+					$this->_createDir() . DS . $data['Document']['file']
 				);
 
 				if ($this->Document->save($data)) {
@@ -372,21 +372,21 @@ class DocumentsController extends AppController {
  * @throws NotFoundException Return an exception if $folderId does not
  * correspond to an existing folder.
  */
-	public function moveFolder($folderId) {
+	public function moveDir($folderId) {
 		$this->set( 'title_for_layout', __('Déplacer'));
 
-		$folderToMove = $this->Folder->findById($folderId);
+		$folderToMove = $this->Dir->findById($folderId);
 		if (!$folderToMove) {
 			throw new NotFoundException(__('Ce dossier n’existe pas.'));
 		}
 
-		if ($folderToMove['Folder']['parent'] == 0) {
+		if ($folderToMove['Dir']['parent'] == 0) {
 			$previousId = 0;
 		} else {
-			$currentFolder = $this->Folder->findById(
-				$folderToMove['Folder']['parent']
+			$currentDir = $this->Dir->findById(
+				$folderToMove['Dir']['parent']
 			);
-			$previousId = $currentFolder['Folder']['id'];
+			$previousId = $currentDir['Dir']['id'];
 		}
 		$this->set('previousId', $previousId);
 
@@ -396,28 +396,28 @@ class DocumentsController extends AppController {
 			'page_title',
 			__(
 				'Où souhaitez-vous déplacer le dossier %s ?',
-				h($folderToMove['Folder']['name'])
+				h($folderToMove['Dir']['name'])
 			)
 		);
 
-		$this->set('model', 'Folder');
+		$this->set('model', 'Dir');
 		$this->set('field', 'parent');
 
-		$this->set('folders', $this->_displayFoldersList($folderId));
+		$this->set('folders', $this->_displayDirsList($folderId));
 
 		if ($this->request->is('post')) {
-			$this->Folder->id = $folderId;
-			if ($this->Folder->save($this->request->data)) {
+			$this->Dir->id = $folderId;
+			if ($this->Dir->save($this->request->data)) {
 				$this->Session->setFlash(
 					__(
 						'Le dossier %s a bien été déplacé.',
-						h($folderToMove['Folder']['name'])
+						h($folderToMove['Dir']['name'])
 					)
 				);
 				return $this->redirect(
 					array(
 						'action' => 'index',
-						$this->request->data['Folder']['parent']
+						$this->request->data['Dir']['parent']
 					)
 				);
 			}
@@ -442,10 +442,10 @@ class DocumentsController extends AppController {
 		if ($fileToMove['Document']['folder'] == 0) {
 			$previousId = 0;
 		} else {
-			$currentFolder = $this->Folder->findById(
+			$currentDir = $this->Dir->findById(
 				$fileToMove['Document']['folder']
 			);
-			$previousId = $currentFolder['Folder']['id'];
+			$previousId = $currentDir['Dir']['id'];
 		}
 
 		$this->set('previousId', $previousId);
@@ -461,7 +461,7 @@ class DocumentsController extends AppController {
 		$this->set('model', 'Document');
 		$this->set('field', 'folder');
 
-		$this->set('folders', $this->_displayFoldersList());
+		$this->set('folders', $this->_displayDirsList());
 
 		if ($this->request->is('post')) {
 			$this->Document->id = $fileId;
@@ -480,28 +480,28 @@ class DocumentsController extends AppController {
 		}
 	}
 
-	public function renameFolder($folderId) {
+	public function renameDir($folderId) {
 		$this->set('title_for_layout', __('Nouveau nom'));
 
-		$folderToRename = $this->Folder->findById($folderId);
+		$folderToRename = $this->Dir->findById($folderId);
 		if (!$folderToRename) {
 			throw new NotFoundException(__('Ce dossier n’existe pas.'));
 		}
 
 		$this->set('folderToRename', $folderToRename);
-		$oldName = $folderToRename['Folder']['name'];
+		$oldName = $folderToRename['Dir']['name'];
 
 		if ($this->request->is('post')) {
-			$this->Folder->id = $folderId;
-			if ($this->Folder->save($this->request->data)) {
+			$this->Dir->id = $folderId;
+			if ($this->Dir->save($this->request->data)) {
 				$this->Session->setFlash(__(
 					'Le dossier « ' . $oldName . ' » a bien été renommé en « ' .
-					$this->request->data['Folder']['name'] . ' ».'
+					$this->request->data['Dir']['name'] . ' ».'
 				));
 				return $this->redirect(
 					array(
 						'action' => 'index',
-						$folderToRename['Folder']['parent']
+						$folderToRename['Dir']['parent']
 					)
 				);
 			}
@@ -549,7 +549,7 @@ class DocumentsController extends AppController {
 
 		// Delete the file on the server and folders if they are empty
 		unlink($path . DS . $file['Document']['file'] );
-		$this->_deleteFolders($path);
+		$this->_deleteDirs($path);
 
 		// Delete the database entry
 		$this->Document->delete($fileId);
@@ -563,7 +563,7 @@ class DocumentsController extends AppController {
  * @return int
  */
 	protected function _count($folderId) {
-		$folder = $this->Folder->find(
+		$folder = $this->Dir->find(
 			'all',
 			array('conditions' => array('parent' => $folderId))
 		);
@@ -597,7 +597,7 @@ class DocumentsController extends AppController {
  * @return string Return the path to the folder that will contain the
  * uploaded file.
  */
-	protected function _createFolder() {
+	protected function _createDir() {
 		$path = 'files' . DS . date('Y', time());
 		if (!file_exists($path)) {
 			mkdir($path);
@@ -619,7 +619,7 @@ class DocumentsController extends AppController {
  * @param string $path The path of the folder to delete.
  * @return bool Return true if all folders are deleted.
  */
-	protected function _deleteFolders($path) {
+	protected function _deleteDirs($path) {
 		// Erase DAY folder
 		if (rmdir($path)) {
 			// Erase MONTH folder
@@ -640,19 +640,19 @@ class DocumentsController extends AppController {
  * alongside the others.
  *
  * @param int $folderId The Id of the folder moved by
- * DocumentsController::moveFolder. This argument is optional as it is
+ * DocumentsController::moveDir. This argument is optional as it is
  * not used by DocumentsController::moveFile.
  *
  * @return array
  */
-	protected function _displayFoldersList($folderId = null) {
+	protected function _displayDirsList($folderId = null) {
 		$root = array(
-			'0' => $this->_createRootFolder()
+			'0' => $this->_createRootDir()
 		);
-		$root['0']['Folder']['name'] = '&nbsp;' . $root['0']['Folder']['name'];
+		$root['0']['Dir']['name'] = '&nbsp;' . $root['0']['Dir']['name'];
 
 		$level = '&nbsp;└–';
-		return $this->_createFoldersList($root, 0, $level, $folderId);
+		return $this->_createDirsList($root, 0, $level, $folderId);
 	}
 
 /**
@@ -666,10 +666,10 @@ class DocumentsController extends AppController {
  * move a file.
  * @return array
  */
-	protected function _createFoldersList($root, $parentId, $level, $folderId = null) {
+	protected function _createDirsList($root, $parentId, $level, $folderId = null) {
 		// We retrieve only the folders contained by the one
 		// which has $parentId as ID
-		$folders = $this->Folder->find(
+		$folders = $this->Dir->find(
 			'all',
 			array(
 				'conditions' => array('parent' => $parentId),
@@ -682,19 +682,19 @@ class DocumentsController extends AppController {
 			foreach ($folders as $folder) {
 				// If moved element is a folder, it will not be displayed
 				if (!is_null($folderId) &&
-					$folder['Folder']['id'] == $folderId) {
+					$folder['Dir']['id'] == $folderId) {
 					continue;
 				} else {
 					$newLevel = $level . '–––';
-					$folder['Folder']['name'] = $level . '→' .
-						$folder['Folder']['name'];
+					$folder['Dir']['name'] = $level . '→' .
+						$folder['Dir']['name'];
 					// We add the first retrieved folder to the list
 					$root[] = $folder;
 					// Then we retrieve the folders it contains and
 					// start again by making the method calling itself
-					$root = $this->_createFoldersList(
+					$root = $this->_createDirsList(
 						$root,
-						$folder['Folder']['id'],
+						$folder['Dir']['id'],
 						$newLevel,
 						$folderId
 					);
@@ -710,9 +710,9 @@ class DocumentsController extends AppController {
  *
  * @return array
  */
-	protected function _createRootFolder() {
+	protected function _createRootDir() {
 		return array(
-			'Folder' => array(
+			'Dir' => array(
 				'id' => 0,
 				'name' => 'Racine',
 				'parent' => 'none'

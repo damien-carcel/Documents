@@ -26,13 +26,13 @@ App::import('Lib', 'HumanReadable');
 
 if ($currentName !== 'Racine') {
 	$path = '';
-	foreach ($previousFolders as $previousFolder) {
+	foreach ($previousDirs as $previousDir) {
 		$path .= $this->Html->link(
-			$previousFolder['Folder']['name'],
+			$previousDir['Dir']['name'],
 			array(
 				'controller' => 'documents',
 				'action' => 'index',
-				$previousFolder['Folder']['id']
+				$previousDir['Dir']['id']
 			)
 		);
 		$path .= ' → ';
@@ -63,7 +63,7 @@ if ($this->Session->read('Auth.User.role') === 'admin' ||
 				'Nouveau Dossier',
 				array(
 					'controller' => 'documents',
-					'action' => 'addFolder',
+					'action' => 'addDir',
 					$currentID
 				)
 			), "\n";
@@ -110,25 +110,25 @@ if ($this->Session->read('Auth.User.role') === 'admin' ||
 
 			<?php
 			foreach ($folders as $folder) {
-				if (!empty($folder['Folder']['name'])) {
+				if (!empty($folder['Dir']['name'])) {
 					?>
 					<tr>
 						<td>
 							<?php
 							echo $this->Html->link(
-								$folder['Folder']['name'],
+								$folder['Dir']['name'],
 								array(
 									'controller' => 'documents',
 									'action' => 'index',
-									$folder['Folder']['id']
+									$folder['Dir']['id']
 								)
 							);
 							?>
 						</td>
 						<td>
 							<?php
-							echo 'Contient ', $folder['Folder']['content'];
-							if ($folder['Folder']['content'] == 1) {
+							echo 'Contient ', $folder['Dir']['content'];
+							if ($folder['Dir']['content'] == 1) {
 								echo ' élément';
 							} else {
 								echo ' éléments';
@@ -141,7 +141,7 @@ if ($this->Session->read('Auth.User.role') === 'admin' ||
 						<td>
 							<?php echo $this->Time->format(
 								'\l\e d/m/Y \à H \h i',
-								$folder['Folder']['modified']
+								$folder['Dir']['modified']
 							); ?>
 						</td>
 						<?php
@@ -150,24 +150,24 @@ if ($this->Session->read('Auth.User.role') === 'admin' ||
 							echo $this->Html->link(
 								'Renommer',
 								array(
-									'action' => 'renameFolder',
-									$folder['Folder']['id']
+									'action' => 'renameDir',
+									$folder['Dir']['id']
 								)
 							);
 							echo ' | ';
 							echo $this->Html->link(
 								'Déplacer',
 								array(
-									'action' => 'moveFolder',
-									$folder['Folder']['id']
+									'action' => 'moveDir',
+									$folder['Dir']['id']
 								)
 							);
 							echo ' | ';
 							echo $this->Form->postLink(
 								'Supprimer',
 								array(
-									'action' => 'deleteFolder',
-									$folder['Folder']['id']
+									'action' => 'deleteDir',
+									$folder['Dir']['id']
 								),
 								array(
 									'confirm' => 'Êtes-vous sûr ? Tous les dossiers et documents contenus seront également éffacés.'

@@ -36,7 +36,7 @@ $path = $this->Html->link(
 <?php
 $options = array();
 foreach ($folders as $folder) {
-	$options[$folder['Folder']['id']] = $folder['Folder']['name'];
+	$options[$folder['Dir']['id']] = $folder['Dir']['name'];
 }
 $attribute = array('legend' => false);
 
