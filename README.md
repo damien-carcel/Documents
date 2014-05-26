@@ -25,7 +25,7 @@ CREATE TABLE documents (
 The ```documents``` table will contain all the informations about the files you will upload.
 
 ```
-CREATE TABLE folders (
+CREATE TABLE dirs (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(50),
 	parent int,
@@ -34,7 +34,7 @@ CREATE TABLE folders (
 );
 ```
 
-The ```folders``` table will contain the informations about the folders that contain your files.
+The ```dirs``` table will contain the informations about the folders that contain your files.
 
 ```
 CREATE TABLE users (
