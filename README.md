@@ -3,13 +3,13 @@ What is Documents?
 
 Documents is a small web application build on top of the [CakePHP framework](http://cakephp.org/).
 
-It is designed to manage files on a PHP/MySQL server in a secure way. Find more on how it work on the dedicated [wiki page](./wiki/application).
+It is designed to manage files on a PHP/MySQL server in a secure way. Find more on how it work on the dedicated [wiki page](https://github.com/damien-carcel/Documents/wiki/application).
 
 # INSTALLATION
 
 ## Setup the database
 
-First, you have to create 3 tables in your database. Look to the dedicated [wiki page](./wiki/database) for more explanation about the different table fields.
+First, you have to create 3 tables in your database. Look to the dedicated [wiki page](https://github.com/damien-carcel/Documents/wiki/database) for more explanation about the different table fields.
 
 ```
 CREATE TABLE documents (
