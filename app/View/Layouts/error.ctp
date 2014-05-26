@@ -23,8 +23,12 @@ $appName = 'Documents';
 <head>
 	<?php echo $this->Html->charset(); ?>
 	<title>
-		<?php echo $appName; ?>:
-		<?php echo $title_for_layout; ?>
+		<?php
+		echo $appName;
+		if ($title_for_layout != '') {
+			echo ' - ', $title_for_layout;
+		}
+		?>
 	</title>
 	<?php
 		echo $this->Html->meta('icon');

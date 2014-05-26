@@ -41,6 +41,8 @@ class UsersController extends AppController {
  * Connect a user.
  */
 	public function login() {
+		$this->set('title_for_layout', __('connexion'));
+
 		$connectedUser = $this->Session->read('Auth.User.username');
 		if (!empty($connectedUser)) {
 			return $this->redirect(
@@ -71,6 +73,8 @@ class UsersController extends AppController {
  * (deleting, changing roles…).
  */
 	public function index() {
+		$this->set('title_for_layout', __('espace d’administration'));
+
 		$this->User->recursive = 0;
 		$this->set('users', $this->paginate());
 	}
@@ -83,6 +87,8 @@ class UsersController extends AppController {
  * exists
  */
 	public function view($id = null) {
+		$this->set('title_for_layout', __('espace utilisateur'));
+
 		$this->User->id = $id;
 		if (!$this->User->exists()) {
 			throw new NotFoundException(__('Utilisateur invalide'));
@@ -94,6 +100,8 @@ class UsersController extends AppController {
  * Add a new user and redirect to the index.
  */
 	public function add() {
+		$this->set('title_for_layout', __('nouvel utilisateur'));
+
 		if ($this->request->is('post')) {
 			$userExists = $this->User->findByUsername(
 				$this->request->data['User']['username']

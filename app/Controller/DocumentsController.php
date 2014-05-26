@@ -61,7 +61,8 @@ class DocumentsController extends AppController {
  * @throws NotFoundException Return an exception if the id
  * folder is not a number.
  */
-	public function index($folderId = 0) {$this->set('title_for_layout', '');
+	public function index($folderId = 0) {
+		$this->set('title_for_layout', __(' '));
 
 		if (is_numeric($folderId)) {
 			// Retrieve all folders contained by current folder
@@ -229,8 +230,7 @@ class DocumentsController extends AppController {
 			);
 			if ($folderExists) {
 				$this->Session->setFlash(
-					__('Un dossier portant le nom %s existe déjà. Veuillez ' .
-						'choisir un autre nom.', h($folderName))
+					__('Un dossier portant le nom %s existe déjà. Veuillez choisir un autre nom.', h($folderName))
 				);
 			} else {
 				$this->Folder->create();
@@ -320,7 +320,9 @@ class DocumentsController extends AppController {
 							h($fileToUpload['Document']['name'])
 						)
 					);
-					return $this->redirect(array('action' => 'index', $folderId));
+					return $this->redirect(
+						array('action' => 'index', $folderId)
+					);
 				}
 			} else {
 				// Save a new entry in database
@@ -336,7 +338,9 @@ class DocumentsController extends AppController {
 				);
 
 				if ($this->Document->save($data)) {
-					return $this->redirect(array('action' => 'index', $folderId));
+					return $this->redirect(
+						array('action' => 'index', $folderId)
+					);
 				}
 			}
 		}
@@ -371,8 +375,10 @@ class DocumentsController extends AppController {
 
 		$this->set(
 			'page_title',
-			'Où souhaitez-vous déplacer le dossier ' .
-			$folderToMove['Folder']['name'] . ' ?'
+			__(
+				'Où souhaitez-vous déplacer le dossier %s ?',
+				h($folderToMove['Folder']['name'])
+			)
 		);
 
 		$this->set('model', 'Folder');
@@ -383,10 +389,12 @@ class DocumentsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Folder->id = $folderId;
 			if ($this->Folder->save($this->request->data)) {
-				$this->Session->setFlash(__(
-					'Le dossier %s a bien été déplacé.',
-					h($folderToMove['Folder']['name'])
-				));
+				$this->Session->setFlash(
+					__(
+						'Le dossier %s a bien été déplacé.',
+						h($folderToMove['Folder']['name'])
+					)
+				);
 				return $this->redirect(
 					array(
 						'action' => 'index',
@@ -425,8 +433,10 @@ class DocumentsController extends AppController {
 
 		$this->set(
 			'page_title',
-			'Où souhaitez-vous déplacer le fichier ' .
-			$fileToMove['Document']['name'] . ' ?'
+			__(
+				'Où souhaitez-vous déplacer le dossier %s ?',
+				h($fileToMove['Document']['name'])
+			)
 		);
 
 		$this->set('model', 'Document');
