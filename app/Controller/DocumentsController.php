@@ -46,7 +46,7 @@ class DocumentsController extends AppController {
  * @return bool
  */
 	public function isAuthorized($user) {
-		if ($this->action === 'index' ||
+		if ($this->action === 'index' || $this->action === 'shareLink' ||
 			(isset($user['role']) && $user['role'] === 'admin')) {
 			return true;
 		}
