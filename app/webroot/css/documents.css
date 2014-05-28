@@ -292,7 +292,6 @@ form .required label:after {
 }
 
 form div.submit {
-    display: inline-block;
     border: 0;
     clear: both;
     margin-top: 10px;
@@ -589,7 +588,6 @@ input[type=submit]:active, .link-button a:active, .actions ul li a:active, .acti
 }
 
 form div.link-button {
-    display: inline-block;
     margin-top: 10px;
     padding-top: 1.1em;
     padding-bottom: 1.1em;
