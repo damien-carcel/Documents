@@ -248,7 +248,7 @@ class DocumentsController extends AppController {
 					)
 				)
 			);
-			if ($folderExists) {
+			if (isset($folderExists)) {
 				$this->Session->setFlash(
 					__('Un dossier portant le nom %s existe déjà. Veuillez choisir un autre nom.', h($folderName))
 				);
@@ -306,7 +306,7 @@ class DocumentsController extends AppController {
 
 		// Check if the folder which will contain the uploaded file exist
 		$folder = $this->Dir->findById($folderId);
-		if (!$folder && $folderId != 0) {
+		if (!isset($folder) && $folderId != 0) {
 			throw new NotFoundException(
 				__(
 					'Le dossier ayant pour identifiant %s n’existe pas.',
@@ -323,9 +323,8 @@ class DocumentsController extends AppController {
 				$this->request->data['Document']['name']['name']
 			);
 
-			if ($fileToUpload &&
+			if (isset($fileToUpload) &&
 				$fileToUpload['Document']['folder'] == $folderId) {
-				//
 
 				$this->Document->id = $fileToUpload['Document']['id'];
 				// Replace the old file by the new one
@@ -386,7 +385,7 @@ class DocumentsController extends AppController {
 		$this->set( 'title_for_layout', __('Déplacer'));
 
 		$folderToMove = $this->Dir->findById($folderId);
-		if (!$folderToMove) {
+		if (!isset($folderToMove)) {
 			throw new NotFoundException(__('Ce dossier n’existe pas.'));
 		}
 
@@ -445,7 +444,7 @@ class DocumentsController extends AppController {
 		$this->set('title_for_layout', __('Déplacer'));
 
 		$fileToMove = $this->Document->findById($fileId);
-		if (!$fileToMove) {
+		if (!isset($fileToMove)) {
 			throw new NotFoundException(__('Ce fichier n’existe pas.'));
 		}
 
@@ -494,7 +493,7 @@ class DocumentsController extends AppController {
 		$this->set('title_for_layout', __('Nouveau nom'));
 
 		$folderToRename = $this->Dir->findById($folderId);
-		if (!$folderToRename) {
+		if (!isset($folderToRename)) {
 			throw new NotFoundException(__('Ce dossier n’existe pas.'));
 		}
 
@@ -522,7 +521,7 @@ class DocumentsController extends AppController {
 		$this->set('title_for_layout', __('Nouveau nom'));
 
 		$fileToRename = $this->Document->findById($fileId);
-		if (!$fileToRename) {
+		if (!isset($fileToRename)) {
 			throw new NotFoundException(__('Ce fichier n’existe pas.'));
 		}
 
