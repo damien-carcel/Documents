@@ -34,7 +34,7 @@ class DocumentsController extends AppController {
 
 	public $uses = array('Document', 'Dir');
 
-	public $helpers = array('Html', 'Form', 'Session', 'Time');
+	public $helpers = array('Html', 'Form', 'Session', 'Time', 'Js');
 
 	public $components = array('Session');
 
@@ -143,7 +143,8 @@ class DocumentsController extends AppController {
 		$fileToShare = $this->_pathToFile($fileToShare);
 
 		$this->response->file(
-			$fileToShare['Document']['path'],
+			$fileToShare['Document']['path'] . DS .
+				$fileToShare['Document']['file'],
 			array(
 				'download' => true,
 				'name' => $fileToShare['Document']['name']
@@ -324,11 +325,14 @@ class DocumentsController extends AppController {
 
 			if ($fileToUpload &&
 				$fileToUpload['Document']['folder'] == $folderId) {
+				//
+
 				$this->Document->id = $fileToUpload['Document']['id'];
 				// Replace the old file by the new one
+				$fileToUpload = $this->_pathToFile($fileToUpload);
 				move_uploaded_file(
 					$this->request->data['Document']['name']['tmp_name'],
-					$this->_pathToFile($fileToUpload['Document']['created']) .
+					$fileToUpload['Document']['path'] .
 						DS . $fileToUpload['Document']['file']
 				);
 
@@ -357,6 +361,12 @@ class DocumentsController extends AppController {
 				);
 
 				if ($this->Document->save($data)) {
+					$this->Session->setFlash(
+						__(
+							'Le fichier %s a bien été ajouté.',
+							h($fileToUpload['Document']['name'])
+						)
+					);
 					return $this->redirect(
 						array('action' => 'index', $folderId)
 					);
@@ -545,11 +555,11 @@ class DocumentsController extends AppController {
 	protected function _delete($fileId) {
 		// Retrieve file information in database
 		$file = $this->Document->findById($fileId);
-		$path = $this->_pathToFile($file['Document']['created']);
+		$file = $this->_pathToFile($file);
 
 		// Delete the file on the server and folders if they are empty
-		unlink($path . DS . $file['Document']['file'] );
-		$this->_deleteDirs($path);
+		unlink($file['Document']['path'] . DS . $file['Document']['file']);
+		$this->_deleteDirs($file['Document']['path']);
 
 		// Delete the database entry
 		$this->Document->delete($fileId);
@@ -585,8 +595,7 @@ class DocumentsController extends AppController {
 		$document['Document']['path'] = 'files' . DS .
 			CakeTime::format('Y', $document['Document']['created']) . DS .
 			CakeTime::format('m', $document['Document']['created']) . DS .
-			CakeTime::format('d', $document['Document']['created']) . DS .
-			$document['Document']['file'];
+			CakeTime::format('d', $document['Document']['created']);
 		return $document;
 	}
 
