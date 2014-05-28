@@ -315,6 +315,11 @@ class DocumentsController extends AppController {
 			);
 		}
 
+		$this->Session->setFlash(
+			__('Attention, si vous ajoutez un fichier portant le même nom ' .
+				'qu’un fichier déjà présent dans ce dossier, le fichier déjà ' .
+				'présent sera  écrasé.')
+		);
 		$this->set('previousId', $folderId);
 
 		if ($this->request->is('post')) {
