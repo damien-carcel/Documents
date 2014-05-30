@@ -21,10 +21,18 @@
 		"php": ">=5.2.8",
 		"ext-mcrypt": "*"
 	},
+    "extra": {
+    "installer-paths": {
+        "app/Plugin/DebugKit": ["cakephp/debug_kit"]
+        }
+    },
 	"require-dev": {
 		"phpunit/phpunit": "3.7.*",
 		"cakephp/debug_kit" : "2.2.*"
 	},
+    "config": {
+        "vendor-dir": "vendors/"
+    },
 	"bin": [
 		"lib/Cake/Console/cake"
 	]
