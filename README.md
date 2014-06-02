@@ -75,6 +75,7 @@ There is a few things that need to be done in priority for a 1.0 release:
 * localization of the application (every messages are in french right now, as it is my mother language),
 * a global users administration page accessible only from the super administrator, allowing to see every users information and change their role in the application,
 * a user administration page: basically the user should be able to change its password, email address…
+* administrators of the application should be able to access a log to know who add/delete/change files/folders.
 
 Other useful functionality can wait for further release:
 * capacity to upload multiple files at once,
