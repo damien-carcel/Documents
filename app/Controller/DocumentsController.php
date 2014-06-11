@@ -248,7 +248,7 @@ class DocumentsController extends AppController {
 					)
 				)
 			);
-			if (isset($folderExists)) {
+			if (!empty($folderExists)) {
 				$this->Session->setFlash(
 					__('Un dossier portant le nom %s existe déjà. Veuillez choisir un autre nom.', h($folderName))
 				);
