@@ -368,7 +368,7 @@ class DocumentsController extends AppController {
 					$this->Session->setFlash(
 						__(
 							'Le fichier %s a bien été ajouté.',
-							h($fileToUpload['Document']['name'])
+							h($data['Document']['name'])
 						)
 					);
 					return $this->redirect(
