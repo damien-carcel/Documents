@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * This file is part of Documents.
+ * This file is part of CakeDocuments.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @copyright   Copyright (C) Damien Carcel (https://github.com/damien-carcel)
- * @link        https://github.com/damien-carcel/Documents
+ * @link        https://github.com/damien-carcel/CakeDocuments
  * @package     app.View.Documents
  * @license     http://www.gnu.org/licenses/gpl.html
  */
