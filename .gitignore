@@ -10,6 +10,11 @@
 /dist
 /tags
 
+# PhpStorm project configuration #
+##################################
+.idea
+composer.phar
+
 # OS generated files #
 ######################
 .DS_Store
@@ -20,8 +25,3 @@
 Icon?
 ehthumbs.db
 Thumbs.db
-
-# PhpStorm project configuration #
-##################################
-.idea
-composer.phar
