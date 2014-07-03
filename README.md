@@ -1,3 +1,6 @@
+**This project is currently stopped, as I switched on a new one based on Symfony 2 framework.**
+**The new project is accessible [here](https://github.com/damien-carcel/Documents).**
+
 What is CakeDocuments?
 ==================
 
