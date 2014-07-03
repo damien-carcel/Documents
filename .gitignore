@@ -24,3 +24,4 @@ Thumbs.db
 # PhpStorm project configuration #
 ##################################
 .idea
+composer.phar
